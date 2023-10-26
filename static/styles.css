@@ -1,0 +1,48 @@
+* {
+    margin: 0;
+    padding: 0;
+    background-color: rgb(69, 69, 69);
+}
+
+.nav-bar {
+    background-color: rgb(69, 69, 69);
+    color: #fff;
+    font-family: "Courier New", "Lucida Console", Monaco, Consolas, monospace;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 0.5%;
+    margin-bottom: 8%;
+    margin-right: 2%;
+    margin-left: 2%;
+    padding: 20px;
+    border: 0.75ex dashed hsl(39, 100%, 50%);
+}
+
+.forum-logo {
+    font-size: 28px
+}
+
+nav a {
+    font-size: 24px;
+    margin-right: 10px;
+    color: hsl(39, 100%, 50%);
+    font-weight: bold;
+}
+
+/* LVHA */
+a:link {
+    text-decoration: none;
+}
+
+a:visit {
+}
+
+a:hover {
+    color: orangered;
+    text-decoration: underline;
+}
+
+a:active {
+}
