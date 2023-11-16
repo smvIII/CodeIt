@@ -1,8 +1,9 @@
 * {
     margin: 0;
     padding: 0;
-    background-color: rgb(69, 69, 69);
+    background-color: rgb(69, 69, 69); 
 }
+
 
 .nav-bar {
     background-color: rgb(69, 69, 69);
@@ -13,7 +14,7 @@
     justify-content: space-between;
     align-items: center;
     margin-top: 0.5%;
-    margin-bottom: 8%;
+    margin-bottom: 5%;
     margin-right: 2%;
     margin-left: 2%;
     padding: 20px;
@@ -22,6 +23,24 @@
 
 .forum-logo {
     font-size: 28px
+}
+
+.nav-bar .search-container {
+    border: none;
+}
+
+.nav-bar input[type=text] {
+    font-size: 10px;
+    font-weight: bold;
+    padding: 5px;
+}
+.nav-bar .search-container button {
+  float: right;
+  padding: 12.75px;
+  background: #ddd;
+  font-size: 10px;
+  border: none;
+  cursor: pointer;
 }
 
 nav a {
@@ -45,4 +64,83 @@ a:hover {
 }
 
 a:active {
+}
+
+.posts-section {
+    color: orange;
+    margin: 5%;
+}
+
+.posts-section .posts-list {
+    list-style-type: none;
+}
+
+.posts-section .posts-list .posts-list-item
+{
+    margin-bottom: 2%;
+    color: rgb(208,208,208);
+    padding: 15px;
+    border-bottom: 1px solid #ddd;
+}
+
+.posts-section strong {
+    color: #fff;
+}
+
+.upvote-arrow {
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-bottom: 12px solid hsl(39, 100%, 50%);
+    position: relative;
+    margin-bottom: 5px;
+    margin-top: 5px;
+} 
+
+.upvote-arrow:link{
+}
+
+.upvote-arrow:visited{
+    
+}
+
+.upvote-arrow:hover {
+    /*border-bottom: 12px solid orangered; */
+    box-shadow: 0 0 3px 2px white;
+    cursor: pointer;
+}
+
+.upvote-arrow:active {
+}
+
+.downvote-arrow {
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 12px solid orangered; /* Changed to border-top and color changed to blue */
+    position: relative;
+}
+
+.downvote-arrow:hover {
+    box-shadow: 0 0 3px 2px white;
+    cursor: pointer;
+}
+
+.vote-container {
+    display: flex;
+    align-items: center;
+}
+
+.arrow-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.vote-count {
+    margin-left: 10px;
+    font-weight: bold;
+    color: #fff;
 }

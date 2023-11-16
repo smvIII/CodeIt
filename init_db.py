@@ -57,12 +57,22 @@ def main():
     cur.execute('''CREATE TABLE ForumPost(
         PostId INTEGER PRIMARY KEY NOT NULL,
         PostedBy TEXT NOT NULL,
+        PostTitle TEXT NOT NULL,
         PostContent TEXT NOT NULL,
         Upvotes INTEGER NOT NULL,
         Downvotes INTEGER NOT NULL
     )''')
-    conn.commit()
-    print('ForumPost table created')
 
+    conn.commit()
+    print("ForumPost table created.")
+
+    content = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis consectetur ultrices egestas. Interdum et malesuada fames ac ante ipsum primis in faucibus. Nam accumsan nibh vitae est porta placerat. Pellentesque lobortis risus non massa posuere, sed consectetur lorem rutrum. Sed sagittis lacus sit amet dui pharetra, quis imperdiet est aliquet. Nam id enim pretium, feugiat mauris non, sollicitudin massa. Integer fermentum magna eget eros ultricies, at venenatis augue congue. Pellentesque consectetur augue nec consequat vehicula. Donec venenatis cursus lobortis. Praesent ut arcu euismod, laoreet elit ac, facilisis nunc. Sed maximus dolor ac nunc volutpat, non iaculis turpis vehicula. Vivamus volutpat non lectus ac eleifend. Maecenas fermentum accumsan semper. Morbi cursus nec ipsum quis gravida. In hac habitasse platea dictumst. Aenean tincidunt cursus metus ac varius"
+    forumStarterPosts = [(1, 'SVossler', 'ExamplePost1', content, 100, 50),
+                         (2, 'SVossler', 'ExamplePost2', content, 50, 100),
+                         (3, 'SVossler', 'ExamplePost3', content, 0, 0),
+                         (4, 'TThompson', 'ExamplePost4', content, 0, 0)]
+    
+    cur.executemany('INSERT INTO ForumPost VALUES (?, ?, ?, ?, ?, ?)', forumStarterPosts)
+    conn.commit()
     conn.close()
 main()

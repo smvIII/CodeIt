@@ -4,13 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link href="../static/login.css" rel="stylesheet">
 </head>
 <body>
-    <h1>Login</h1>
-    <form action="/login" method="post">
-      <input type="text" name="username" /> <br />
-      <input type="password" name="password" /> <br />
-      <input type="submit" value="Log in" /> <br />
-    </form> 
+
+  {% with messages = get_flashed_messages() %} 
+    {% if messages %}
+    <ul>
+      {% for message in messages %}
+      <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %} 
+  {% endwith %}
+
+    <h1>CodeIt</h1>
+    <div class="login-area">
+      <form action="/login" method="post">
+        <input type="text" name="username" placeholder="Username" /> <br />
+        <input type="password" name="password" placeholder="Password" /> <br />
+        <input class="button" type="submit" value="Log in" /> <br />
+      </form> 
+    </div>  
 </body>
 </html>
