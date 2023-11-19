@@ -36,6 +36,7 @@
     </nav>
     <section class="posts-section">
       <ul class="posts-list">
+        <b>Posts By You:</b>
         {% for post in posts %}
           <li class="posts-list-item">
             <strong>{{post["PostTitle"]}} - Posted by: {{post["PostedBy"]}}</strong><br>
