@@ -134,7 +134,7 @@ def profile():
 
     sql_select_query = """select * from ForumPost WHERE\
         PostedBy = ?"""
-    cur.execute(sql_select_query, (nm,))
+    cur.execute(sql_select_query, nm)
     posts = cur.fetchall()
 
     return render_template('profile.html',
