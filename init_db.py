@@ -60,7 +60,6 @@ def main():
         PostTitle TEXT NOT NULL,
         PostContent TEXT NOT NULL,
         PostSubForum TEXT NOT NULL,
-        Comments TEXT NOT NULL,
         Upvotes INTEGER NOT NULL,
         Downvotes INTEGER NOT NULL
     )''')

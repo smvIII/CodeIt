@@ -11,13 +11,22 @@
     <nav class="nav-bar">
       <div class="forum-logo">
         <h3>CodeIt</h3>
-        <select id="subforum" name="subforum">
-          <option value="all">All</option>
-          <option value="python">Python</option>
-          <option value="javascript">JavaScript</option>
-          <option value="c++">C++</option>
-          <option value="java">Java</option>
-        </select>
+        <form id="myForm" action="/on-select-change", method="POST">
+          <select id="subforum" name="subforum" onchange="submitForm()">
+            <!--
+            <option value="all">All</option>
+            <option value="python">Python</option>
+            <option value="javascript">JavaScript</option>
+            <option value="c++">C++</option>
+            <option value="java">Java</option>
+            -->
+            <option value="all" {% if selected_subforum == 'all' %}selected{% endif %}>All</option>
+            <option value="python" {% if selected_subforum == 'python' %}selected{% endif %}>Python</option>
+            <option value="javascript" {% if selected_subforum == 'javascript' %}selected{% endif %}>JavaScript</option>
+            <option value="c++" {% if selected_subforum == 'c++' %}selected{% endif %}>C++</option>
+            <option value="java" {% if selected_subforum == 'java' %}selected{% endif %}>Java</option>
+          </select>
+        </form>
       </div>
       <div class="search-container">
         <!-- change form action to the actual search feature-->
@@ -56,5 +65,10 @@
         {% endfor %}
       </ul>
     </section>
+    <script>
+      function submitForm() {
+          document.getElementById("myForm").submit();
+      }
+  </script>
   </body>
 </html>

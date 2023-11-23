@@ -140,6 +140,7 @@ def profile():
         PostedBy = ?"""
     cur.execute(sql_select_query, (nm,))
     posts = cur.fetchall()
+    con.close()
 
     return render_template('profile.html',
             postedBy = nm, name = session['name'], posts=posts)
@@ -163,8 +164,27 @@ def create_post_submit():
     cur.execute("INSERT INTO ForumPost (PostedBy, PostTitle, PostContent, PostSubForum, Upvotes, Downvotes) VALUES(?,?,?,?,?,?)"
                 ,(postedBy, title, content, subforum, 0, 0))
     con.commit()
-
     return index()
+
+@app.route("/on-select-change", methods=["POST"])
+def on_select_change():
+    subforum = request.form['subforum']
+    con = sql.connect("ForumPosts.db")
+    con.row_factory = sql.Row
+    cur = con.cursor()
+
+    if subforum == "all":
+        cur.execute("select * from ForumPost")
+    else:
+        sql_select_query = """select * from ForumPost where\
+            PostSubForum = ?"""
+        cur.execute(sql_select_query, (subforum,))
+
+    posts = cur.fetchall()
+
+    con.close()
+    return render_template('index.html', posts=posts, selected_subforum=subforum)
+
 
 if __name__ == "__main__":
     # TT: secret key needs to be set to avoid error at runtime
