@@ -6,7 +6,6 @@ app = Flask(__name__)
 @app.route("/")
 @app.route("/index")
 def index():
-
     con = sql.connect("ForumPosts.db")
     con.row_factory = sql.Row
     cur = con.cursor()
@@ -41,7 +40,7 @@ def register_submit():
                 ,(username, password, email, 0))
     con.commit()
 
-    return render_template('index.html')
+    return index()
 
 #app.route("/post-submit") when posts are created and submitted
 
@@ -91,42 +90,47 @@ def logout():
 @app.route("/upvote-clicked")
 def upvote_clicked():
     #if logged in, also need a toggle function to keep track of if it has already been upvoted
-    post_id = request.args.get('post_id')
+    # add a flash message that says you must be logged in to upvote or something
+    if session['logged_in'] == True:
+        post_id = request.args.get('post_id')
 
-    conn = sql.connect("ForumPosts.db")
-    cur = conn.cursor()
+        conn = sql.connect("ForumPosts.db")
+        cur = conn.cursor()
 
-    cur.execute("SELECT Upvotes FROM ForumPost WHERE PostId = ?", (post_id,))
-    upvotes = cur.fetchone()[0] + 1
+        cur.execute("SELECT Upvotes FROM ForumPost WHERE PostId = ?", (post_id,))
+        upvotes = cur.fetchone()[0] + 1
 
-    cur.execute("UPDATE ForumPost SET Upvotes = ? WHERE PostId = ?", (upvotes, post_id))
-    postId = request.args.get('post_id')
+        cur.execute("UPDATE ForumPost SET Upvotes = ? WHERE PostId = ?", (upvotes, post_id))
+        postId = request.args.get('post_id')
 
-    conn.commit()
-    conn.close()
+        conn.commit()
+        conn.close()
     return index()
 
 @app.route("/downvote-clicked")
 def downvote_clicked():
-    post_id = request.args.get('post_id')
+    if session['logged_in'] == True:
+        post_id = request.args.get('post_id')
 
-    conn = sql.connect("ForumPosts.db")
-    cur = conn.cursor()
+        conn = sql.connect("ForumPosts.db")
+        cur = conn.cursor()
 
-    cur.execute("SELECT Downvotes FROM ForumPost WHERE PostId = ?", (post_id,))
-    downvotes = cur.fetchone()[0] + 1
+        cur.execute("SELECT Downvotes FROM ForumPost WHERE PostId = ?", (post_id,))
+        downvotes = cur.fetchone()[0] + 1
 
-    cur.execute("UPDATE ForumPost SET Downvotes = ? WHERE PostId = ?", (downvotes, post_id))
-    postId = request.args.get('post_id')
+        cur.execute("UPDATE ForumPost SET Downvotes = ? WHERE PostId = ?", (downvotes, post_id))
+        postId = request.args.get('post_id')
 
-    conn.commit()
-    conn.close()
+        conn.commit()
+        conn.close()
     return index()
 
 @app.route("/profile")
 def profile():
-
+    foo = request.args.get('posted_by')
     nm = session['name']
+    if foo != session['name']:
+        nm = foo
 
     con = sql.connect("ForumPosts.db")
     con.row_factory = sql.Row
@@ -138,7 +142,29 @@ def profile():
     posts = cur.fetchall()
 
     return render_template('profile.html',
-                name = session['name'], posts=posts)
+            postedBy = nm, name = session['name'], posts=posts)
+
+@app.route("/create-post")
+def create_post():
+    if session['logged_in'] == True:
+        return render_template("create_post.html")
+    else:
+        return index()
+
+@app.route("/create-post-submit", methods =['POST'])
+def create_post_submit():
+    title = request.form['post-title'] 
+    postedBy = session['name']
+    content = request.form['post-content']
+    subforum = request.form['subforum']
+
+    con = sql.connect("ForumPosts.db")
+    cur = con.cursor()
+    cur.execute("INSERT INTO ForumPost (PostedBy, PostTitle, PostContent, PostSubForum, Upvotes, Downvotes) VALUES(?,?,?,?,?,?)"
+                ,(postedBy, title, content, subforum, 0, 0))
+    con.commit()
+
+    return index()
 
 if __name__ == "__main__":
     # TT: secret key needs to be set to avoid error at runtime

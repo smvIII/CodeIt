@@ -10,33 +10,23 @@
     <!--If logged in, show "my profile link"-->
     <nav class="nav-bar">
       <div class="forum-logo">
-        <h1>Profile</h1>
+        <h1>{{postedBy}}</h1>
       </div>
       {% if session['logged_in'] %}
-        <div>Welcome {{name}}</div>
-      {% endif %}
-      <div class="search-container">
-        <!-- change form action to the actual search feature-->
-        <form action="/index">
-          <input type="text" placeholder="Search.." name="search">
-          <button type="submit"><i class="fa fa-search"></i></button>
-        </form>
-      </div>
-      {% if session['logged_in'] %}
-        <a>Post</a>
+        <a href="/create-post">Post</a>
       {% endif %}
       {% if not session['logged_in'] %}
         <a href="/login-clicked">Login</a>
         <a href="/register">Register</a>
       {% endif %}
       {% if session['logged_in'] %}
-        <a href="/index">Home</a>
         <a href="/logout">Logout</a>
       {% endif %}
+      <a href="/index">Home</a>
     </nav>
     <section class="posts-section">
       <ul class="posts-list">
-        <b>Posts By You:</b>
+        <b>{{postedBy}}'s Posts:</b>
         {% for post in posts %}
           <li class="posts-list-item">
             <strong>{{post["PostTitle"]}} - Posted by: {{post["PostedBy"]}}</strong><br>

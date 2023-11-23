@@ -50,6 +50,12 @@ nav a {
     font-weight: bold;
 }
 
+.posts-section a {
+    color: hsl(39, 100%, 50%);
+    font-weight: bold;
+}
+
+
 /* LVHA */
 a:link {
     text-decoration: none;

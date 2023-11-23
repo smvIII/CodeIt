@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="../static/create_post.css" rel="stylesheet">
+</head>
+<body>
+
+    
+<!--
+  {% with messages = get_flashed_messages() %} 
+  {% if messages %}
+  <ul>
+    {% for message in messages %}
+    <li>{{ message }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %} 
+{% endwith %}
+-->
+
+
+  <h1>Create Post</h1>
+  <div class="create-post-area">
+    <form action="{{ url_for('create_post_submit') }}" method="post">
+      <input type="text" name="post-title" placeholder="Post Title" /> <br />
+      <textarea class="content-input" name="post-content">Post Content</textarea> <br />
+      <label for="subforum">Select a subforum:</label>
+      <select id="subforum" name="subforum">
+        <option value="python">Python</option>
+        <option value="javascript">JavaScript</option>
+        <option value="c++">C++</option>
+        <option value="java">Java</option>
+      </select> <br />
+      <input class="button" type="submit" value="Create Post" /> <br />
+    </form> 
+  </div>   
+</body>
+</html>

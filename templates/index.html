@@ -10,11 +10,15 @@
     <!--If logged in, show "my profile link"-->
     <nav class="nav-bar">
       <div class="forum-logo">
-        <h1>CodeIt</h1>
+        <h3>CodeIt</h3>
+        <select id="subforum" name="subforum">
+          <option value="all">All</option>
+          <option value="python">Python</option>
+          <option value="javascript">JavaScript</option>
+          <option value="c++">C++</option>
+          <option value="java">Java</option>
+        </select>
       </div>
-      {% if session['logged_in'] %}
-        <div>Welcome {{name}}</div>
-      {% endif %}
       <div class="search-container">
         <!-- change form action to the actual search feature-->
         <form action="/index">
@@ -23,7 +27,7 @@
         </form>
       </div>
       {% if session['logged_in'] %}
-        <a>Post</a>
+        <a href="/create-post">Post</a>
       {% endif %}
       {% if not session['logged_in'] %}
         <a href="/login-clicked">Login</a>
@@ -31,14 +35,14 @@
       {% endif %}
       {% if session['logged_in'] %}
         <a href="/logout">Logout</a>
-        <a href="/profile">Profile</a>
+        <a href="{{url_for('profile', posted_by=session['name'])}}">Profile</a>
       {% endif %}
     </nav>
     <section class="posts-section">
       <ul class="posts-list">
         {% for post in posts %}
           <li class="posts-list-item">
-            <strong>{{post["PostTitle"]}} - Posted by: {{post["PostedBy"]}}</strong><br>
+            <strong><a>{{post["PostTitle"]}}</a> - Posted by: <a href="{{url_for('profile', posted_by=post['PostedBy'])}}">{{post["PostedBy"]}}</a></strong><br>
             <p>{{post["PostContent"]}}</p>
             <div class="vote-container">
               <div class="arrow-container">
@@ -46,6 +50,7 @@
                 <a class="downvote-arrow" href="{{url_for('downvote_clicked', post_id=post['PostId'])}}"></a>
               </div>
               <span class="vote-count">{{ post["Upvotes"] - post["Downvotes"]}}</span>
+              <!--{{numberComments}} Comments -->
             </div>
           </li>
         {% endfor %}
