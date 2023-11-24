@@ -185,6 +185,24 @@ def on_select_change():
     con.close()
     return render_template('index.html', posts=posts, selected_subforum=subforum)
 
+@app.route("/post")
+def post():
+    foo = request.args.get('post_title')
+    nm = session['name']
+    if foo != session['name']:
+        nm = foo
+
+    con = sql.connect("ForumPosts.db")
+    con.row_factory = sql.Row
+    cur = con.cursor()
+
+    sql_select_query = """select * from ForumPost WHERE\
+        PostTitle = ?"""
+    cur.execute(sql_select_query, (nm,))
+    posts = cur.fetchall()
+
+    return render_template('post.html',
+            postedBy = nm, name = session['name'], posts=posts)
 
 if __name__ == "__main__":
     # TT: secret key needs to be set to avoid error at runtime

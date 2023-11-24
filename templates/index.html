@@ -51,7 +51,7 @@
       <ul class="posts-list">
         {% for post in posts %}
           <li class="posts-list-item">
-            <strong><a>{{post["PostTitle"]}}</a> - Posted by: <a href="{{url_for('profile', posted_by=post['PostedBy'])}}">{{post["PostedBy"]}}</a></strong><br>
+            <strong><a href="{{url_for('post', post_title=post['PostTitle'])}}">{{post["PostTitle"]}}</a> - Posted by: <a href="{{url_for('profile', posted_by=post['PostedBy'])}}">{{post["PostedBy"]}}</a></strong><br>
             <p>{{post["PostContent"]}}</p>
             <div class="vote-container">
               <div class="arrow-container">
