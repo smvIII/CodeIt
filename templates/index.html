@@ -3,23 +3,16 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>CodeIt</title>
     <link href="../static/styles.css" rel="stylesheet" />
   </head>
   <body>
     <!--If logged in, show "my profile link"-->
     <nav class="nav-bar">
       <div class="forum-logo">
-        <h3>CodeIt</h3>
+        <h3>CodeIt/</h3>
         <form id="myForm" action="/on-select-change", method="POST">
           <select id="subforum" name="subforum" onchange="submitForm()">
-            <!--
-            <option value="all">All</option>
-            <option value="python">Python</option>
-            <option value="javascript">JavaScript</option>
-            <option value="c++">C++</option>
-            <option value="java">Java</option>
-            -->
             <option value="all" {% if selected_subforum == 'all' %}selected{% endif %}>All</option>
             <option value="python" {% if selected_subforum == 'python' %}selected{% endif %}>Python</option>
             <option value="javascript" {% if selected_subforum == 'javascript' %}selected{% endif %}>JavaScript</option>

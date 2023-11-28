@@ -22,7 +22,19 @@
 }
 
 .forum-logo {
-    font-size: 28px
+    font-size: 28px;
+    display: flex;
+    align-items: center;
+}
+
+.nav-bar #myForm #subforum {
+    border: none;              /* Removes the border */
+    color: #fff;               /* Sets text color to white */
+    background-color: transparentA;
+    font-size: 28px;
+    -webkit-appearance: none;  /* Removes the default dropdown arrow in WebKit browsers */
+    -moz-appearance: none;     /* Removes the default dropdown arrow in Mozilla browsers */
+    appearance: none;          /* Removes the default dropdown arrow in modern browsers */
 }
 
 .nav-bar .search-container {
@@ -149,4 +161,8 @@ a:active {
     margin-left: 10px;
     font-weight: bold;
     color: #fff;
+}
+
+.nav-bar #myForm #subforum {
+    padding-right: 0px;
 }
