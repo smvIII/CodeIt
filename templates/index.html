@@ -3,8 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="../static/img/favicon-32x32.png"
+      rel="shortcut icon"
+      type="image/png"
+    />
     <title>CodeIt</title>
-    <link href="../static/styles.css" rel="stylesheet" />
+    <link href="../static/css/styles.css" rel="stylesheet" />
   </head>
   <body>
     <!--If logged in, show "my profile link"-->
@@ -23,7 +28,7 @@
       </div>
       <div class="search-container">
         <!-- change form action to the actual search feature-->
-        <form action="/index">
+        <form action="/search", method="POST" >
           <input type="text" placeholder="Search.." name="search">
           <button type="submit"><i class="fa fa-search"></i></button>
         </form>
@@ -42,6 +47,9 @@
     </nav>
     <section class="posts-section">
       <ul class="posts-list">
+        {% with message = get_flashed_messages() %}
+          <div class="flashed-message">{{message[0]}}</div>
+        {% endwith %}
         {% for post in posts %}
           <li class="posts-list-item">
             <strong><a href="{{url_for('post', post_id=post['PostId'])}}">{{post["PostTitle"]}}</a> - Posted by: <a href="{{url_for('profile', posted_by=post['PostedBy'])}}">{{post["PostedBy"]}}</a></strong><br>

@@ -11,8 +11,6 @@ def root():
 
 @app.route("/index")
 def index():
-    #session['logged_in'] = False
-    #session['name'] = ""
     con = sql.connect("ForumPosts.db")
     con.row_factory = sql.Row
     cur = con.cursor()
@@ -51,9 +49,18 @@ def register_submit():
 
     con = sql.connect("ForumUsers.db")
     cur = con.cursor()
-    cur.execute("INSERT INTO ForumUser (Username, Password, EmailAddress, IsAdmin) VALUES(?,?,?,?)"
-                ,(username, password, email, 0))
-    con.commit()
+    sql_select_statement = """select Username from ForumUser where Username = ?"""
+    cur.execute(sql_select_statement,(username,))
+    user = cur.fetchone()
+    print(user)
+
+    if user == None:
+        cur.execute("INSERT INTO ForumUser (Username, Password, EmailAddress, IsAdmin) VALUES(?,?,?,?)"
+                    ,(username, password, email, 0))
+        con.commit()
+    else:
+        flash("Username taken, please choose another.")
+        return register()
 
     return index()
 
@@ -67,8 +74,6 @@ def login():
     try:
         nm = request.form['username']
         pw = request.form['password']
-
-
 
         with sql.connect("ForumUsers.db") as con:
             con.row_factory = sql.Row
@@ -84,7 +89,6 @@ def login():
                 session['logged_in'] = True
                 session['name'] = row['Username']
             else:
-                # i think this session declaration is redundant now- SV
                 session['logged_in'] = False
                 flash('invalid username or password')
                 return render_template('login.html')
@@ -122,6 +126,8 @@ def upvote_clicked():
 
         conn.commit()
         conn.close()
+    else:
+        flash("You need to be logged in to do upvote.")
     return index()
 
 @app.route("/downvote-clicked")
@@ -140,6 +146,8 @@ def downvote_clicked():
 
         conn.commit()
         conn.close()
+    else:
+        flash("You need to be logged in to downvote.")
     return index()
 
 @app.route("/profile")
@@ -254,24 +262,46 @@ def post():
 @app.route("/comment-submit", methods=['POST'])
 def comment_submit():
     #if logged in and the comment isn't empty
-    if session['logged_in'] and request.form["comment-content"]:
-        con = sql.connect("PostComments.db")
-        cur = con.cursor()
-        id = request.args.get("post_id")
-        content = request.form["comment-content"]
-        commentedBy = session["name"]
-        cur.execute("insert into PostComment (PostId, CommentContent,CommentedBy) VALUES (?, ?, ?)"
-                    ,(id, content,commentedBy)) 
-        con.commit()
-        con.close()
-        return post()
+    if session['logged_in']:
+        if request.form["comment-content"]:
+            con = sql.connect("PostComments.db")
+            cur = con.cursor()
+            id = request.args.get("post_id")
+            content = request.form["comment-content"]
+            commentedBy = session["name"]
+            cur.execute("insert into PostComment (PostId, CommentContent,CommentedBy) VALUES (?, ?, ?)"
+                        ,(id, content,commentedBy)) 
+            con.commit()
+            con.close()
+            return post()
+        else:
+            flash("You can't post an empty comment!")
+            return post()
     else:
-        #you must be logged in to submit comment flashA
         flash("You have to be logged in to comment!")
-        return post() 
+        return post()
+    
+@app.route("/search", methods=["POST"])
+def search_submit():
+    query = request.form["search"]
+    con = sql.connect("ForumPosts.db")
+    con.row_factory = sql.Row
+    cur = con.cursor()
+
+    cur.execute("ATTACH DATABASE 'PostComments.db' AS PostCommentsDB")
+
+    sql_select_statement = """
+        SELECT ForumPost.*, COUNT(PostComment.CommentId) AS CommentCount
+        FROM ForumPost
+        LEFT JOIN PostCommentsDB.PostComment ON ForumPost.PostId = PostComment.PostId
+        WHERE ForumPost.PostTitle LIKE ? OR ForumPost.PostContent LIKE ?
+        GROUP BY ForumPost.PostId
+    """
+    cur.execute(sql_select_statement, ('%' + query + '%','%' + query + '%'))
+    posts = cur.fetchall()
+    
+    return render_template('index.html', posts=posts)
 
 if __name__ == "__main__":
-    # TT: secret key needs to be set to avoid error at runtime
-    # TODO probably should be randomized?
     app.secret_key = 'secretKey'
     app.run(debug=True)

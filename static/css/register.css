@@ -57,3 +57,6 @@ input[type=submit] {
 input[type=submit]:hover {
   background-color: #cc8400;
 }
+.flashed-message {
+  color: orangered;
+}
