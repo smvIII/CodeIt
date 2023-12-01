@@ -44,7 +44,7 @@
       <ul class="posts-list">
         {% for post in posts %}
           <li class="posts-list-item">
-            <strong><a href="{{url_for('post', post_title=post['PostTitle'])}}">{{post["PostTitle"]}}</a> - Posted by: <a href="{{url_for('profile', posted_by=post['PostedBy'])}}">{{post["PostedBy"]}}</a></strong><br>
+            <strong><a href="{{url_for('post', post_id=post['PostId'])}}">{{post["PostTitle"]}}</a> - Posted by: <a href="{{url_for('profile', posted_by=post['PostedBy'])}}">{{post["PostedBy"]}}</a></strong><br>
             <p>{{post["PostContent"]}}</p>
             <div class="vote-container">
               <div class="arrow-container">
@@ -52,7 +52,7 @@
                 <a class="downvote-arrow" href="{{url_for('downvote_clicked', post_id=post['PostId'])}}"></a>
               </div>
               <span class="vote-count">{{ post["Upvotes"] - post["Downvotes"]}}</span>
-              <!--{{numberComments}} Comments -->
+              <span class="comment-count">{{ post["CommentCount"] }} Comments</span>
             </div>
           </li>
         {% endfor %}

@@ -4,8 +4,63 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link href="../static/post.css" rel="stylesheet">
 </head>
 <body>
-	<a>Place holder text until we figure out how to store and display comments on a post. - TT</a>
+    <nav class="nav-bar">
+        <div class="forum-logo">
+          <h3>CodeIt/{{postDict['subforum']}}</h3>
+        </div>
+        <div class="search-container">
+          <!-- change form action to the actual search feature-->
+          <form action="/index">
+            <input type="text" placeholder="Search.." name="search">
+            <button type="submit"><i class="fa fa-search"></i></button>
+          </form>
+        </div>
+        {% if not session['logged_in'] %}
+          <a href="/login-clicked">Login</a>
+          <a href="/register">Register</a>
+        {% endif %}
+        {% if session['logged_in'] %}
+          <a href="/logout">Logout</a>
+          <a href="{{url_for('profile', posted_by=session['name'])}}">Profile</a>
+        {% endif %}
+        <a href="/index">Home</a>
+    </nav>
+
+    <div class="post-container">
+      <header>
+        <p>Posted under /{{postDict["subforum"]}} by <a href="{{url_for('profile', posted_by=postDict['postedBy'])}}">{{postDict["postedBy"]}}</a> </p> <br />
+        <h2>{{postDict["title"]}}</h2>
+      </header>
+  
+      <article>
+        <p>{{postDict["content"]}}</p> <br />
+      </article>
+  
+      <footer>
+        <p>Comment on Post: 
+          {% with message = get_flashed_messages() %}
+            <div class="flashed-message">{{message[0]}}</div>
+          {% endwith %}</p>
+        <div class="comment-input-container">
+          <form action="{{ url_for('comment_submit', post_id=postDict['postId']) }}" method="post">
+            <textarea class="comment-input" name="comment-content"></textarea>
+            <input class="button" type="submit" value="Comment" /> 
+          </form>
+        </div>
+       
+        <br/>
+        <br/>
+        <br/>
+
+        {% for comment in comments %}
+            <a href="{{url_for('profile', posted_by=comment['CommentedBy'])}}">{{comment["CommentedBy"]}}:</a>
+            <p>{{ comment["CommentContent"]  }}</p> <br/>
+        {% endfor %}
+      </footer>
+    </div>
+    
 </body>
 </html>

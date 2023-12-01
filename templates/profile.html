@@ -12,6 +12,13 @@
       <div class="forum-logo">
         <h1>{{postedBy}}</h1>
       </div>
+      <div class="search-container">
+        <!-- change form action to the actual search feature-->
+        <form action="/index">
+          <input type="text" placeholder="Search.." name="search">
+          <button type="submit"><i class="fa fa-search"></i></button>
+        </form>
+      </div>
       {% if session['logged_in'] %}
         <a href="/create-post">Post</a>
       {% endif %}
@@ -29,7 +36,7 @@
         <b>{{postedBy}}'s Posts:</b>
         {% for post in posts %}
           <li class="posts-list-item">
-            <strong>{{post["PostTitle"]}} - Posted by: {{post["PostedBy"]}}</strong><br>
+            <strong><a href="{{url_for('post', post_id=post['PostId'])}}">{{post["PostTitle"]}}</a> - Posted by: {{post["PostedBy"]}}</strong><br>
             <p>{{post["PostContent"]}}</p>
             <div class="vote-container">
               <div class="arrow-container">

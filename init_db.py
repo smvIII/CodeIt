@@ -65,12 +65,37 @@ def main():
     )''')
 
     conn.commit()
+    conn.close()
     print("ForumPost table created.")
+
+    conn = sqlite3.connect("PostComments.db")
+    cur = conn.cursor()
+
+    try:
+        cur.execute('DROP TABLE IF EXISTS PostComment')
+        conn.commit()
+        print("PostComment table dropped.")
+    except:
+        print("The table did not exist.")
+
+    cur.execute('''CREATE TABLE PostComment(
+                CommentId INTEGER PRIMARY KEY NOT NULL,
+                PostId INTEGER NOT NULL,
+                CommentContent TEXT NOT NULL,
+                CommentedBy TEXT NOT NULL,
+                FOREIGN KEY (PostId) REFERENCES ForumPost(PostId)
+    )''')
+    conn.commit()
+    conn.close()
+    print("PostComment tabled created.")
+
+    conn = sqlite3.connect("ForumPosts.db")
+    cur = conn.cursor()
 
     content = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis consectetur ultrices egestas. Interdum et malesuada fames ac ante ipsum primis in faucibus. Nam accumsan nibh vitae est porta placerat. Pellentesque lobortis risus non massa posuere, sed consectetur lorem rutrum. Sed sagittis lacus sit amet dui pharetra, quis imperdiet est aliquet. Nam id enim pretium, feugiat mauris non, sollicitudin massa. Integer fermentum magna eget eros ultricies, at venenatis augue congue. Pellentesque consectetur augue nec consequat vehicula. Donec venenatis cursus lobortis. Praesent ut arcu euismod, laoreet elit ac, facilisis nunc. Sed maximus dolor ac nunc volutpat, non iaculis turpis vehicula. Vivamus volutpat non lectus ac eleifend. Maecenas fermentum accumsan semper. Morbi cursus nec ipsum quis gravida. In hac habitasse platea dictumst. Aenean tincidunt cursus metus ac varius"
     forumStarterPosts = [(1, 'SVossler', 'ExamplePost1', content, 'python', 100, 50),
-                         (2, 'SVossler', 'ExamplePost2', content, 'c++', 50, 100),
-                         (3, 'SVossler', 'ExamplePost3', content, 'java', 0, 0),
+                         (2, 'DClemente', 'ExamplePost2', content, 'c++', 50, 100),
+                         (3, 'JScarff', 'ExamplePost3', content, 'java', 0, 0),
                          (4, 'TThompson', 'ExamplePost4', content, 'javascript', 0, 0)]
     
     cur.executemany('INSERT INTO ForumPost VALUES (?, ?, ?, ?, ?, ?, ?)', forumStarterPosts)

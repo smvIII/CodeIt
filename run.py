@@ -4,12 +4,27 @@ import sqlite3 as sql
 app = Flask(__name__)
                 
 @app.route("/")
+def root():
+    session["logged_in"] = False
+    session['name'] = ""
+    return index()
+
 @app.route("/index")
 def index():
+    #session['logged_in'] = False
+    #session['name'] = ""
     con = sql.connect("ForumPosts.db")
     con.row_factory = sql.Row
     cur = con.cursor()
-    cur.execute('select * from ForumPost')
+
+    cur.execute("ATTACH DATABASE 'PostComments.db' AS PostCommentsDB")
+    cur.execute('''
+        SELECT ForumPost.*, COUNT(PostComment.CommentId) AS CommentCount
+        FROM ForumPost
+        LEFT JOIN PostComment ON ForumPost.PostId = PostComment.PostId
+        GROUP BY ForumPost.PostId
+    ''') 
+
     posts = cur.fetchall()
 
     if not session.get('logged_in'):
@@ -42,7 +57,6 @@ def register_submit():
 
     return index()
 
-#app.route("/post-submit") when posts are created and submitted
 
 @app.route("/login-clicked")
 def login_clicked():
@@ -53,6 +67,8 @@ def login():
     try:
         nm = request.form['username']
         pw = request.form['password']
+
+
 
         with sql.connect("ForumUsers.db") as con:
             con.row_factory = sql.Row
@@ -68,6 +84,7 @@ def login():
                 session['logged_in'] = True
                 session['name'] = row['Username']
             else:
+                # i think this session declaration is redundant now- SV
                 session['logged_in'] = False
                 flash('invalid username or password')
                 return render_template('login.html')
@@ -128,9 +145,10 @@ def downvote_clicked():
 @app.route("/profile")
 def profile():
     foo = request.args.get('posted_by')
-    nm = session['name']
     if foo != session['name']:
         nm = foo
+    else:
+        nm = session['name']
 
     con = sql.connect("ForumPosts.db")
     con.row_factory = sql.Row
@@ -172,12 +190,23 @@ def on_select_change():
     con = sql.connect("ForumPosts.db")
     con.row_factory = sql.Row
     cur = con.cursor()
+    cur.execute("ATTACH DATABASE 'PostComments.db' AS PostCommentsDB")
 
     if subforum == "all":
-        cur.execute("select * from ForumPost")
+        cur.execute('''
+            SELECT ForumPost.*, COUNT(PostCommentsDB.PostComment.CommentId) AS CommentCount
+            FROM ForumPost
+            LEFT JOIN PostCommentsDB.PostComment ON ForumPost.PostId = PostCommentsDB.PostComment.PostId
+            GROUP BY ForumPost.PostId
+        ''')
     else:
-        sql_select_query = """select * from ForumPost where\
-            PostSubForum = ?"""
+        sql_select_query = '''
+            SELECT ForumPost.*, COUNT(PostCommentsDB.PostComment.CommentId) AS CommentCount
+            FROM ForumPost
+            LEFT JOIN PostCommentsDB.PostComment ON ForumPost.PostId = PostCommentsDB.PostComment.PostId
+            WHERE ForumPost.PostSubForum = ?
+            GROUP BY ForumPost.PostId
+        '''
         cur.execute(sql_select_query, (subforum,))
 
     posts = cur.fetchall()
@@ -187,22 +216,59 @@ def on_select_change():
 
 @app.route("/post")
 def post():
-    foo = request.args.get('post_title')
-    nm = session['name']
-    if foo != session['name']:
-        nm = foo
+    id = request.args.get('post_id')
 
     con = sql.connect("ForumPosts.db")
     con.row_factory = sql.Row
     cur = con.cursor()
 
     sql_select_query = """select * from ForumPost WHERE\
-        PostTitle = ?"""
-    cur.execute(sql_select_query, (nm,))
-    posts = cur.fetchall()
+        PostId = ?"""
+    cur.execute(sql_select_query, (id,))
+    post = cur.fetchone()
+    con.close()
+
+    postDict = None
+    if post:
+        postDict = {
+            "postId": post[0],
+            "postedBy": post[1],
+            "title": post[2],
+            "content": post[3],
+            "subforum": post[4]
+        }
+
+    con = sql.connect("PostComments.db")
+    con.row_factory = sql.Row
+    cur = con.cursor()
+    sql_select_query = """select * from PostComment where\
+        PostId = ?"""
+    cur.execute(sql_select_query, (id,))
+    comments = cur.fetchall()
+    print(comments)
+    con.close()
 
     return render_template('post.html',
-            postedBy = nm, name = session['name'], posts=posts)
+            postDict = postDict, comments=comments )
+
+@app.route("/comment-submit", methods=['POST'])
+def comment_submit():
+    #if logged in and the comment isn't empty
+    if session['logged_in'] and request.form["comment-content"]:
+        con = sql.connect("PostComments.db")
+        cur = con.cursor()
+        id = request.args.get("post_id")
+        content = request.form["comment-content"]
+        commentedBy = session["name"]
+        cur.execute("insert into PostComment (PostId, CommentContent,CommentedBy) VALUES (?, ?, ?)"
+                    ,(id, content,commentedBy)) 
+        con.commit()
+        con.close()
+        return post()
+    else:
+        #you must be logged in to submit comment flashA
+        flash("You have to be logged in to comment!")
+        return post() 
 
 if __name__ == "__main__":
     # TT: secret key needs to be set to avoid error at runtime
