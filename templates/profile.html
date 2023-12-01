@@ -42,7 +42,7 @@
         {% for post in posts %}
           <li class="posts-list-item">
             <strong><a href="{{url_for('post', post_id=post['PostId'])}}">{{post["PostTitle"]}}</a> - Posted by: {{post["PostedBy"]}}</strong><br>
-            <p>{{post["PostContent"]}}</p>
+            <p>{{post["PostContent"]|safe}}</p>
             <div class="vote-container">
               <div class="arrow-container">
                 <a class="upvote-arrow" href="{{url_for('upvote_clicked', post_id=post['PostId'])}}"></a>

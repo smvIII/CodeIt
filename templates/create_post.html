@@ -31,6 +31,9 @@
   <div class="create-post-area">
     <form action="{{ url_for('create_post_submit') }}" method="post">
       <input type="text" name="post-title" placeholder="Post Title" /> <br />
+      {% with message = get_flashed_messages() %}
+        <div class="flashed-message">{{message[0]}}</div>
+      {% endwith %}
       <textarea class="content-input" name="post-content">Post Content</textarea> <br />
       <label for="subforum">Select a subforum:</label>
       <select id="subforum" name="subforum">

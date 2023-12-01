@@ -90,7 +90,7 @@ def login():
                 session['name'] = row['Username']
             else:
                 session['logged_in'] = False
-                flash('invalid username or password')
+                flash('Invalid username or password')
                 return render_template('login.html')
 
     except:
@@ -185,11 +185,16 @@ def create_post_submit():
     content = request.form['post-content']
     subforum = request.form['subforum']
 
-    con = sql.connect("ForumPosts.db")
-    cur = con.cursor()
-    cur.execute("INSERT INTO ForumPost (PostedBy, PostTitle, PostContent, PostSubForum, Upvotes, Downvotes) VALUES(?,?,?,?,?,?)"
-                ,(postedBy, title, content, subforum, 0, 0))
-    con.commit()
+    if title and content:  
+        con = sql.connect("ForumPosts.db")
+        cur = con.cursor()
+        cur.execute("INSERT INTO ForumPost (PostedBy, PostTitle, PostContent, PostSubForum, Upvotes, Downvotes) VALUES(?,?,?,?,?,?)"
+                    ,(postedBy, title, content, subforum, 0, 0))
+        con.commit()
+    else:
+        flash("Your post needs a title and content")
+        return create_post()
+
     return index()
 
 @app.route("/on-select-change", methods=["POST"])

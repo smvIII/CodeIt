@@ -12,7 +12,7 @@
     <link href="../static/css/login.css" rel="stylesheet">
 </head>
 <body>
-
+<!-- 
   {% with messages = get_flashed_messages() %} 
     {% if messages %}
     <ul>
@@ -21,12 +21,15 @@
       {% endfor %}
     </ul>
     {% endif %} 
-  {% endwith %}
+  {% endwith %} -->
 
     <h1>CodeIt</h1>
     <div class="login-area">
       <form action="/login" method="post">
         <input type="text" name="username" placeholder="Username" /> <br />
+        {% with message = get_flashed_messages() %}
+          <div class="flashed-message">{{message[0]}}</div>
+        {% endwith %}
         <input type="password" name="password" placeholder="Password" /> <br />
         <input class="button" type="submit" value="Log in" /> <br />
       </form> 

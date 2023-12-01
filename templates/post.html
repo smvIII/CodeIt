@@ -41,7 +41,7 @@
       </header>
   
       <article>
-        <p>{{postDict["content"]}}</p> <br />
+        <p>{{postDict["content"]|safe}}</p> <br />
       </article>
   
       <footer>
@@ -62,7 +62,7 @@
 
         {% for comment in comments %}
             <a href="{{url_for('profile', posted_by=comment['CommentedBy'])}}">{{comment["CommentedBy"]}}:</a>
-            <p>{{ comment["CommentContent"]  }}</p> <br/>
+            <p>{{ comment["CommentContent"]|safe }}</p> <br/>
         {% endfor %}
       </footer>
     </div>
