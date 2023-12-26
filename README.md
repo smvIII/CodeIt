@@ -32,7 +32,7 @@ This project was created by students at Florida State University for their softw
 [![Click the image to be redirected to the video](https://img.youtube.com/vi/1VGL2ltHpMs/0.jpg)](https://www.youtube.com/watch?v=1VGL2ltHpMs)
 
 ## Project Contributors
-Stanley Vossler
-Jacob Scarff
-Travis Thompson
+Stanley Vossler  
+Jacob Scarff  
+Travis Thompson  
 Daniel Clemente
