@@ -1,5 +1,5 @@
 # CodeIt
-This project was created by 
+This project was created by students at Florida State University for their software engineering capstone requirement. It was completed over 15 weeks which included 5 phases of development: Research and Preliminary Design, Data Design, Module Development, and Testing/Debugging. The documents directory of this project contains our software requirements specification document and also the Gantt chart that was used to keep the team on task with each phase. This project uses the python framework Flask for all of its backend implementations. The front-end is is simply HTML/CSS/JS and SQLite3 as the database.
 
 ## File Structure
 ```markdown
@@ -30,3 +30,9 @@ This project was created by
 ```
 ## Video Presentation and Demo (click on image)
 [![Click the image to be redirected to the video](https://img.youtube.com/vi/1VGL2ltHpMs/0.jpg)](https://www.youtube.com/watch?v=1VGL2ltHpMs)
+
+## Project Contributors
+Stanley Vossler
+Jacob Scarff
+Travis Thompson
+Daniel Clemente
